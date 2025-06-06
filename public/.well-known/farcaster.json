@@ -1,0 +1,35 @@
+{
+	"accountAssociation": {
+		"header": "eyJmaWQiOjY1NDYsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgyMWNBOUYwRjdDMGI1OWY2MTZiMUQ5NjMyNWQ1NUI2MmM5NjYxRDZkIn0",
+		"payload": "eyJkb21haW4iOiJzbmFwcGEtbWluaS1hcHAuYXJ0bHUud29ya2Vycy5kZXYifQ",
+		"signature": "MHg3YzM0MWJhNGE3OTI3Y2ZhOTE1YWZmMjk0YTlhMWMxMzgyNzY5N2Q2ZTg4NGExNjNkODRmNGQ4Nzc3ZGZlOTY5NjNjOTlhY2JiZDk4ZWJjMmQ1Y2MxMTNlYzk3NmU4ZjI5MjI4MzU5NDk5MDE4MjFlYjBhZThkYThiYzMwMzEyYzFj"
+	},
+	"frame": {
+		"version": "0.0.1",
+		"name": "Snappa 🐟 ",
+		"subtitle": "read write own IT ALL",
+		"description": "Snappa, Snappa Swappa, Decent Bookmarks, SassyHash",
+		"tagline": "your portal to Snapchain",
+		"primaryCategory": "social",
+		"tags": ["bookmarks", "defi", "ape", "sassy", "SassyHash"],
+		"iconUrl": "https://snappa-mini-app.artlu.workers.dev/favicon.png",
+		"homeUrl": "https://snappa-mini-app.artlu.workers.dev",
+		"splashImageUrl": "https://snappa-mini-app.artlu.workers.dev/favicon.gif",
+		"splashBackgroundColor": "#000000",
+		"castShareUrl": "https://snappa-mini-app.artlu.workers.dev/sassy",
+		"webhookUrl": "https://snappa-mini-app.artlu.workers.dev/webhook",
+		"ogTitle": "Snappa Mini App",
+		"ogDescription": "Snappa Mini App - Snappa, Snappa Swappa, Decent Bookmarks, SassyHash",
+		"ogImageUrl": "https://snappa-mini-app.artlu.workers.dev/favicon.png",
+		"heroImageUrl": "https://snappa-mini-app.artlu.workers.dev/BeautifulFish.mp4",
+		"requiredChains": ["eip155:8453"],
+		"requiredCapabilities": [
+			"actions.signIn",
+			"wallet.getEthereumProvider",
+			"actions.viewProfile",
+			"actions.openUrl",
+			"actions.ready",
+			"actions.addMiniApp"
+		]
+	}
+}
