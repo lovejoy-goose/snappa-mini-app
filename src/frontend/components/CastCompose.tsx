@@ -1,18 +1,10 @@
 import type { ChangeEvent } from "preact/compat";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import toast from "react-hot-toast";
-import { hexToBytes } from "viem";
 import { useImagesQuery } from "../hooks/queries/useCdnQuery";
-import { useNamuQuery } from "../hooks/queries/useOpenQuery";
-import { useProtectedQuery } from "../hooks/queries/useProtectedQuery";
 import { useFrameSDK } from "../hooks/use-frame-sdk";
-import {
-	ComposeMode,
-	useInMemoryZustand,
-	useLocalStorageZustand,
-} from "../hooks/use-zustand";
+import { ComposeMode, useInMemoryZustand } from "../hooks/use-zustand";
 import { CDN_URL, LONG_MAX_LENGTH } from "../lib/constants";
-import { publishCast } from "../lib/hubs";
 import { getByteLength } from "../lib/utils";
 import { MediaSelectionModal } from "./MediaSelectionModal";
 import { SharedCast } from "./SharedCast";
@@ -20,43 +12,22 @@ import { SharedCast } from "./SharedCast";
 export const CastCompose = () => {
 	const [text, setText] = useState("");
 	const [displayText, setDisplayText] = useState("");
-	const [errorText, setErrorText] = useState("");
 	const [trouble, setTrouble] = useState("");
 	const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
 	const [selectedImages, setSelectedImages] = useState<string[]>([]);
 
 	const { composeCast } = useFrameSDK();
-	const { jwt, secureContextFid, castResponse, composeMode, setComposeMode } =
-		useInMemoryZustand();
-	const { pk } = useLocalStorageZustand();
-
-	const query = useProtectedQuery(jwt);
-	const { pk: pkFromBackend } = query.data ?? {};
+	const { castResponse, composeMode, setComposeMode } = useInMemoryZustand();
 
 	const { data } = useImagesQuery();
 
-	const hasSigner = (pk || pkFromBackend) && secureContextFid;
-	const buttonText = hasSigner
-		? composeMode === ComposeMode.Reply
-			? "Reply w/ signer"
-			: composeMode === ComposeMode.Quote
-				? "Quote w/ signer"
-				: "Cast w/ signer"
-		: composeMode === ComposeMode.Reply
-			? "Reply"
-			: "Compose";
+	const buttonText = composeMode === ComposeMode.Reply ? "Reply" : "Compose";
 
 	useEffect(() => {
 		if (castResponse) {
 			setComposeMode(ComposeMode.Reply);
 		}
 	}, [castResponse, setComposeMode]);
-
-	const toggleReplyOrQuote = () => {
-		setComposeMode(
-			composeMode === ComposeMode.Reply ? ComposeMode.Quote : ComposeMode.Reply,
-		);
-	};
 
 	const debouncedSetText = useCallback((newText: string) => {
 		setDisplayText(newText);
@@ -84,67 +55,24 @@ export const CastCompose = () => {
 			const embeds = selectedImages.map((imageId) => ({
 				url: `${CDN_URL}/${imageId}`,
 			}));
-			if (hasSigner) {
-				try {
-					if (composeMode === ComposeMode.Quote && castResponse) {
-						await publishCast({
-							fid: secureContextFid,
-							pk: pk ?? pkFromBackend,
-							text,
-							embeds: [
-								{
-									castId: {
-										fid: castResponse.fid,
-										hash: hexToBytes(castResponse.hash),
-									},
-								},
-								...embeds.slice(0, 1),
-							],
-						});
-					} else {
-						await publishCast({
-							fid: secureContextFid,
-							pk: pk ?? pkFromBackend,
-							text,
-							parentCast: castResponse
-								? {
-										fid: castResponse.fid,
-										hash: castResponse.hash,
-									}
-								: undefined,
-							embeds,
-						});
-					}
-					toast.success("Successfully submitted to Snapchain");
-					setErrorText("");
-				} catch (error) {
-					console.error(error);
-					setErrorText(
-						error instanceof Error
-							? error.message
-							: JSON.stringify(error, null, 2),
-					);
-					toast.error("Failed to publish cast");
-				}
-			} else {
-				await composeCast(
-					text,
-					castResponse
-						? {
-								type: "cast",
-								hash: castResponse.hash,
-							}
-						: undefined,
-					embeds.length < 1
-						? undefined
-						: embeds.length === 1
-							? [embeds[0].url]
-							: [embeds[0].url, embeds[1].url],
-				);
-			}
-			setText("");
-			setDisplayText("");
+
+			await composeCast(
+				text,
+				castResponse
+					? {
+							type: "cast",
+							hash: castResponse.hash,
+						}
+					: undefined,
+				embeds.length < 1
+					? undefined
+					: embeds.length === 1
+						? [embeds[0].url]
+						: [embeds[0].url, embeds[1].url],
+			);
 		}
+		setText("");
+		setDisplayText("");
 	};
 
 	const handleMediaSelection = (imageIds: string[]) => {
@@ -222,20 +150,6 @@ export const CastCompose = () => {
 					>
 						{buttonText}
 					</button>
-					{castResponse && hasSigner ? (
-						<button
-							type="button"
-							onClick={toggleReplyOrQuote}
-							disabled={!text.trim()}
-							className="btn btn-soft"
-						>
-							{composeMode === ComposeMode.Reply ? (
-								<i className="ri-refresh-line" />
-							) : (
-								<i className="ri-chat-4-line" />
-							)}
-						</button>
-					) : null}
 				</div>
 				<button
 					type="button"
@@ -247,8 +161,6 @@ export const CastCompose = () => {
 				</button>
 				<div />
 			</div>
-
-			<div className="text-sm text-error text-left">{errorText}</div>
 
 			{selectedImages.length > 0 && (
 				<div className="flex gap-8">

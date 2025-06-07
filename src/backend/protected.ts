@@ -1,8 +1,6 @@
-import { CacheGetResponse } from "@gomomento/sdk-web";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { jwt } from "hono/jwt";
-import invariant from "tiny-invariant";
 import { z } from "zod";
 import type { DecentBookmark } from "../shared/types";
 import {
@@ -11,7 +9,6 @@ import {
 	saveDecentBookmark,
 } from "./lib/decent-bookmarks";
 import { getEtherscanTokenBalance } from "./lib/etherscan";
-import Redis from "./lib/momento";
 import { getNeynarUser } from "./lib/neynar";
 import { getTextByCastHash, writeWhistle } from "./lib/whistles";
 
@@ -28,25 +25,7 @@ export const protectedRoutes = protectedApp
 				success: false,
 				fid: null,
 				secret: null,
-				pk: null,
 				zeroex: null,
-			});
-		}
-
-		const cacheClient = new Redis(c.env);
-		const cacheName = c.env.MOMENTO_CACHE_NAME;
-		const cacheKey = `signerPk:${payload.fid}`;
-		const cacheResponse = await cacheClient.get(cacheName, cacheKey);
-
-		if (cacheResponse.type === CacheGetResponse.Hit) {
-			const { fid, pk } = JSON.parse(cacheResponse.valueString());
-			invariant(fid === payload.fid, "Invalid cache key");
-			return c.json({
-				success: true,
-				fid,
-				secret: c.env.SECRET,
-				pk,
-				zeroex: c.env.ZEROEX_API_KEY,
 			});
 		}
 
@@ -54,7 +33,6 @@ export const protectedRoutes = protectedApp
 			success: true,
 			fid: payload.fid,
 			secret: c.env.SECRET,
-			pk: null,
 			zeroex: c.env.ZEROEX_API_KEY,
 		});
 	})

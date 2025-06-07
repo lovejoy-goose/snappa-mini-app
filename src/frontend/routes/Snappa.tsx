@@ -1,6 +1,5 @@
 import { useEffect } from "preact/hooks";
 import { CastCompose } from "../components/CastCompose";
-import { PrivateKey } from "../components/PrivateKey";
 import SpringTransition from "../components/effects/SpringTransition";
 import { api } from "../hooks/queries/useOpenQuery";
 import { useFrameSDK } from "../hooks/use-frame-sdk";
@@ -36,7 +35,6 @@ const Snappa = () => {
 				<article className="prose dark:prose-invert">
 					<div className="flex flex-col gap-4 p-4 my-4">
 						<CastCompose />
-						<PrivateKey />
 					</div>
 				</article>
 			</SpringTransition>

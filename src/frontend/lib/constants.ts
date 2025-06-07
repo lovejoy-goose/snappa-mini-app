@@ -100,51 +100,5 @@ export const ALLOWED_BASE_TOKENS = sift(
 	["USDC", "ETH"].map((ks) => KNOWN_TOKENS.find((t) => t.symbol === ks)),
 );
 
-interface Hub {
-	shortname: string;
-	url: string;
-	ssl: boolean;
-	fid: number;
-	contact: string;
-	write: boolean;
-}
-
-const knownHubs: Hub[] = [
-	{
-		shortname: "neynar",
-		url: "hub-api.neynar.com",
-		ssl: true,
-		fid: 6131,
-		write: true,
-		contact: "https://neynar.com",
-	},
-	{
-		shortname: "pinata",
-		url: "hub.pinata.cloud",
-		ssl: true,
-		fid: 311315,
-		write: true,
-		contact: "https://www.pinata.cloud/farcaster",
-	},
-	{
-		shortname: "merv",
-		url: "hub.merv.fun:3381",
-		ssl: false,
-		fid: 1356,
-		write: true,
-		contact: "https://github.com/backmeupplz",
-	  },	
-];
-
-export type KnownHubs = "neynar" | "pinata" | "merv";
-
-export const getHub = (shortname: KnownHubs): Hub => {
-	const hub = knownHubs.find((hub) => hub.shortname === shortname);
-	if (!hub) {
-		throw new Error(`Hub ${shortname} not found`);
-	}
-	return hub;
-};
-
 export const MUTE_PHRASE =
 	"(mute the phrase '!sassy1' to stop seeing SassyHash 💅 in your feed)";

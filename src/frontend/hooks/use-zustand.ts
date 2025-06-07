@@ -68,14 +68,10 @@ export const useInMemoryZustand = create(
 
 export const useLocalStorageZustand = create(
 	persist(
-		combine(
-			{ mutePhrase: true as boolean, pk: null as string | null },
-			(set) => ({
-				setPk: (pk: string | null) => set({ pk }),
-				toggleMutePhrase: () =>
-					set((state) => ({ mutePhrase: !state.mutePhrase })),
-			}),
-		),
+		combine({ mutePhrase: true as boolean }, (set) => ({
+			toggleMutePhrase: () =>
+				set((state) => ({ mutePhrase: !state.mutePhrase })),
+		})),
 		{
 			name: "zustand-store",
 			storage: createJSONStorage(() => localStorage),

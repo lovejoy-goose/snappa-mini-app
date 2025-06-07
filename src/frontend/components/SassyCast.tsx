@@ -2,12 +2,7 @@ import { keccak256 } from "js-sha3";
 import type { ChangeEvent } from "preact/compat";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import toast from "react-hot-toast";
-import { hexToBytes } from "viem";
-import { useNamuQuery } from "../hooks/queries/useOpenQuery";
-import {
-	useProtectedQuery,
-	useWriteWhistleQuery,
-} from "../hooks/queries/useProtectedQuery";
+import { useWriteWhistleQuery } from "../hooks/queries/useProtectedQuery";
 import { useFrameSDK } from "../hooks/use-frame-sdk";
 import {
 	ComposeMode,
@@ -15,48 +10,28 @@ import {
 	useLocalStorageZustand,
 } from "../hooks/use-zustand";
 import { MAX_LENGTH, MUTE_PHRASE } from "../lib/constants";
-import { publishCast } from "../lib/hubs";
 import { getByteLength } from "../lib/utils";
 import { SharedCast } from "./SharedCast";
 
 export const SassyCast = () => {
 	const [text, setText] = useState("");
 	const [displayText, setDisplayText] = useState("");
-	const [errorText, setErrorText] = useState("");
 	const [trouble, setTrouble] = useState("");
 
 	const { composeCast } = useFrameSDK();
-	const { castResponse, jwt, secureContextFid, composeMode, setComposeMode } =
+	const { castResponse, jwt, composeMode, setComposeMode } =
 		useInMemoryZustand();
-	const { pk, mutePhrase, toggleMutePhrase } = useLocalStorageZustand();
-
-	const query = useProtectedQuery(jwt);
-	const { pk: pkFromBackend } = query.data ?? {};
+	const { mutePhrase, toggleMutePhrase } = useLocalStorageZustand();
 
 	const { mutateAsync: writeWhistle } = useWriteWhistleQuery(jwt, text);
 
-	const hasSigner = (pk || pkFromBackend) && secureContextFid;
-	const buttonText = hasSigner
-		? composeMode === ComposeMode.Reply
-			? "Reply w/ signer"
-			: composeMode === ComposeMode.Quote
-				? "Quote w/ signer"
-				: "Cast w/ signer"
-		: composeMode === ComposeMode.Reply
-			? "Reply"
-			: "Compose";
+	const buttonText = composeMode === ComposeMode.Reply ? "Reply" : "Compose";
 
 	useEffect(() => {
 		if (castResponse) {
 			setComposeMode(ComposeMode.Reply);
 		}
 	}, [castResponse, setComposeMode]);
-
-	const toggleReplyOrQuote = () => {
-		setComposeMode(
-			composeMode === ComposeMode.Reply ? ComposeMode.Quote : ComposeMode.Reply,
-		);
-	};
 
 	const debouncedSetText = useCallback((newText: string) => {
 		setDisplayText(newText);
@@ -90,57 +65,15 @@ export const SassyCast = () => {
 				toast.error("Failed to write SassyHash 💅");
 			}
 			const hash = keccak256(text);
-			if (hasSigner) {
-				try {
-					if (composeMode === ComposeMode.Quote && castResponse) {
-						await publishCast({
-							fid: secureContextFid,
-							pk: pk ?? pkFromBackend,
-							text: `${hash}${mutePhrase ? `\n\n${MUTE_PHRASE}` : ""}`,
-							embeds: [
-								{
-									castId: {
-										fid: castResponse.fid,
-										hash: hexToBytes(castResponse.hash),
-									},
-								},
-							],
-						});
-					} else {
-						await publishCast({
-							fid: secureContextFid,
-							pk: pk ?? pkFromBackend,
-							text: `${hash}${mutePhrase ? `\n\n${MUTE_PHRASE}` : ""}`,
-							parentCast: castResponse
-								? {
-										fid: castResponse.fid,
-										hash: castResponse.hash,
-									}
-								: undefined,
-						});
-					}
-					toast.success("Successfully submitted to Snapchain");
-					setErrorText("");
-				} catch (error) {
-					console.error(error);
-					setErrorText(
-						error instanceof Error
-							? error.message
-							: JSON.stringify(error, null, 2),
-					);
-					toast.error("Failed to publish cast");
-				}
-			} else {
-				await composeCast(
-					`${hash}${mutePhrase ? `\n\n${MUTE_PHRASE}` : ""}`,
-					castResponse
-						? {
-								type: "cast",
-								hash: castResponse.hash,
-							}
-						: undefined,
-				);
-			}
+			await composeCast(
+				`${hash}${mutePhrase ? `\n\n${MUTE_PHRASE}` : ""}`,
+				castResponse
+					? {
+							type: "cast",
+							hash: castResponse.hash,
+						}
+					: undefined,
+			);
 			setText("");
 			setDisplayText("");
 		}
@@ -206,20 +139,6 @@ export const SassyCast = () => {
 						<span className="text-lg">💅</span>
 						{buttonText}
 					</button>
-					{castResponse && hasSigner ? (
-						<button
-							type="button"
-							onClick={toggleReplyOrQuote}
-							disabled={!text.trim()}
-							className="btn btn-soft"
-						>
-							{composeMode === ComposeMode.Reply ? (
-								<i className="ri-refresh-line" />
-							) : (
-								<i className="ri-chat-4-line" />
-							)}
-						</button>
-					) : null}
 				</div>
 
 				<label className="label flex flex-col items-center gap-0">
@@ -233,7 +152,6 @@ export const SassyCast = () => {
 				</label>
 			</div>
 
-			<div className="text-sm text-error text-left">{errorText}</div>
 			{mutePhrase ? (
 				<span className="text-sm text-left italic text-wrap mx-8">
 					{MUTE_PHRASE}

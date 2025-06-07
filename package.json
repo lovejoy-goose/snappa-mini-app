@@ -3,7 +3,6 @@
 	"description": "Snappa Mini App",
 	"version": "0.0.1",
 	"dependencies": {
-		"@farcaster/core": "^0.16.4",
 		"@farcaster/frame-sdk": "^0.0.60",
 		"@farcaster/frame-wagmi-connector": "^0.0.49",
 		"@gomomento/sdk-web": "^1.111.0",
