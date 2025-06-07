@@ -10,8 +10,8 @@ export const BLOCKLIST = [];
 
 const queries: Record<string, string> = {
 	getTextByCastHash: gql`
-    query getTextByCastHash($castFid: Int!, $castHash: String!, $fid: Int!) {
-      getTextByCastHash(castFid: $castFid, castHash: $castHash, viewerFid: $fid) {
+    query getTextByCastHash($castFid: Int!, $castHash: String!, $viewerFid: Int!) {
+      getTextByCastHash(castFid: $castFid, castHash: $castHash, viewerFid: $viewerFid) {
         isDecrypted
         timestamp
         text
@@ -118,7 +118,7 @@ export const getTextByCastHash = async (
 		return res;
 	} catch (error) {
 		throw new Error(
-			`Failed to get text by cast hash: ${castHash} for: ${viewerFid}`,
+			`Failed to get text by cast hash: ${castFid}/${castHash} for viewer ${viewerFid}: ${error}`,
 		);
 	}
 };
