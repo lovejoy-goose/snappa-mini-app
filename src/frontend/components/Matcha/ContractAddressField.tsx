@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { useGeckoTerminalCoinDetailsQuery } from "../../hooks/queries/useOpenQuery";
-import { useZustand } from "../../hooks/use-zustand";
+import { useInMemoryZustand, useZustand } from "../../hooks/use-zustand";
 import { formatAddress } from "../../lib/utils";
 import { CoinDetailsModal } from "./CoinDetailsModal";
 
@@ -10,6 +10,7 @@ export const ContractAddressField = () => {
 	const { data: coinDetails } = useGeckoTerminalCoinDetailsQuery(ca);
 	const [isCoinDetailsModalOpen, setIsCoinDetailsModalOpen] = useState(false);
 	const { setNewToken } = useZustand();
+	const { castResponse } = useInMemoryZustand();
 
 	const handleClear = () => {
 		setCa("");
@@ -31,6 +32,17 @@ export const ContractAddressField = () => {
 		});
 		setIsCoinDetailsModalOpen(false);
 	};
+
+	useEffect(() => {
+		const regex = /(?:^|\s)0x([A-Fa-f0-9]{40})(?:\s|$)/;
+		if (castResponse) {
+			const contractAddressMatch = castResponse.text?.match(regex);
+			if (contractAddressMatch) {
+				const contractAddress = `0x${contractAddressMatch[1]}`;
+				setCa(contractAddress);
+			}
+		}
+	}, [castResponse]);
 
 	// Show modal when we have coin details
 	useEffect(() => {
