@@ -15,22 +15,6 @@ export const useNameQuery = () => {
 	});
 };
 
-export const useNamuQuery = (secureContextFid: number | null) => {
-	return useQuery({
-		queryKey: ["namu"],
-		queryFn: async () => {
-			if (!secureContextFid) {
-				throw new Error("Secure context FID is required");
-			}
-			const res = await api.namu.$get({
-				query: { secureContextFid: secureContextFid.toString() },
-			});
-			return res.json();
-		},
-		enabled: !!secureContextFid,
-	});
-};
-
 export const useTimeQuery = () => {
 	return useQuery({
 		queryKey: ["time"],

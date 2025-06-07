@@ -23,7 +23,7 @@ const client = fetcher({
 export async function publishCast(params: {
 	fid: number;
 	pk: `0x${string}`;
-	neynarApiKey: string;
+	neynarApiKey?: string;
 	text: string;
 	parentCast?: { fid: number; hash: `0x${string}` };
 	embeds?: Embed[];
@@ -78,7 +78,7 @@ export async function publishCast(params: {
 
 	console.log("created message, encoding...");
 	const messageBytes = Buffer.from(Message.encode(result.value).finish());
-	console.log("encoded message, sending via Neynar HTTPS Hubs API...");
+	console.log("encoded message, sending via Hubs API...");
 
 	try {
 		const response = await client.post<Response>(
@@ -88,7 +88,7 @@ export async function publishCast(params: {
 				...postConfig,
 				headers: {
 					...postConfig.headers,
-					"x-api-key": neynarApiKey,
+					...(neynarApiKey ? { "x-api-key": neynarApiKey } : {}),
 				},
 			},
 		);

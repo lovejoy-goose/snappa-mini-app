@@ -126,9 +126,17 @@ const knownHubs: Hub[] = [
 		write: true,
 		contact: "https://www.pinata.cloud/farcaster",
 	},
+	{
+		shortname: "merv",
+		url: "hub.merv.fun:3381",
+		ssl: false,
+		fid: 1356,
+		write: true,
+		contact: "https://github.com/backmeupplz",
+	  },	
 ];
 
-export type KnownHubs = "neynar" | "pinata";
+export type KnownHubs = "neynar" | "pinata" | "merv";
 
 export const getHub = (shortname: KnownHubs): Hub => {
 	const hub = knownHubs.find((hub) => hub.shortname === shortname);

@@ -29,7 +29,6 @@ export const protectedRoutes = protectedApp
 				fid: null,
 				secret: null,
 				pk: null,
-				neynoo: null,
 				zeroex: null,
 			});
 		}
@@ -47,7 +46,6 @@ export const protectedRoutes = protectedApp
 				fid,
 				secret: c.env.SECRET,
 				pk,
-				neynoo: c.env.NEYNAR_API_KEY,
 				zeroex: c.env.ZEROEX_API_KEY,
 			});
 		}
@@ -57,7 +55,6 @@ export const protectedRoutes = protectedApp
 			fid: payload.fid,
 			secret: c.env.SECRET,
 			pk: null,
-			neynoo: c.env.NEYNAR_API_KEY,
 			zeroex: c.env.ZEROEX_API_KEY,
 		});
 	})

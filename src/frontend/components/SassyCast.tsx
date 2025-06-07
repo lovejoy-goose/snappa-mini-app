@@ -30,15 +30,12 @@ export const SassyCast = () => {
 		useInMemoryZustand();
 	const { pk, mutePhrase, toggleMutePhrase } = useLocalStorageZustand();
 
-	const { data: namuQueryResult } = useNamuQuery(secureContextFid);
-	const { namu } = namuQueryResult ?? {};
 	const query = useProtectedQuery(jwt);
-	const { neynoo, pk: pkFromBackend } = query.data ?? {};
+	const { pk: pkFromBackend } = query.data ?? {};
 
 	const { mutateAsync: writeWhistle } = useWriteWhistleQuery(jwt, text);
 
-	const hasSigner =
-		(neynoo ?? namu) && (pk || pkFromBackend) && secureContextFid;
+	const hasSigner = (pk || pkFromBackend) && secureContextFid;
 	const buttonText = hasSigner
 		? composeMode === ComposeMode.Reply
 			? "Reply w/ signer"
@@ -99,7 +96,6 @@ export const SassyCast = () => {
 						await publishCast({
 							fid: secureContextFid,
 							pk: pk ?? pkFromBackend,
-							neynarApiKey: neynoo,
 							text: `${hash}${mutePhrase ? `\n\n${MUTE_PHRASE}` : ""}`,
 							embeds: [
 								{
@@ -114,7 +110,6 @@ export const SassyCast = () => {
 						await publishCast({
 							fid: secureContextFid,
 							pk: pk ?? pkFromBackend,
-							neynarApiKey: neynoo,
 							text: `${hash}${mutePhrase ? `\n\n${MUTE_PHRASE}` : ""}`,
 							parentCast: castResponse
 								? {

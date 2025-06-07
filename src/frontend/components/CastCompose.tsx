@@ -30,15 +30,12 @@ export const CastCompose = () => {
 		useInMemoryZustand();
 	const { pk } = useLocalStorageZustand();
 
-	const { data: namuQueryResult } = useNamuQuery(secureContextFid);
-	const { namu } = namuQueryResult ?? {};
 	const query = useProtectedQuery(jwt);
-	const { neynoo, pk: pkFromBackend } = query.data ?? {};
+	const { pk: pkFromBackend } = query.data ?? {};
 
 	const { data } = useImagesQuery();
 
-	const hasSigner =
-		(neynoo ?? namu) && (pk || pkFromBackend) && secureContextFid;
+	const hasSigner = (pk || pkFromBackend) && secureContextFid;
 	const buttonText = hasSigner
 		? composeMode === ComposeMode.Reply
 			? "Reply w/ signer"
@@ -93,7 +90,6 @@ export const CastCompose = () => {
 						await publishCast({
 							fid: secureContextFid,
 							pk: pk ?? pkFromBackend,
-							neynarApiKey: neynoo ?? namu,
 							text,
 							embeds: [
 								{
@@ -109,7 +105,6 @@ export const CastCompose = () => {
 						await publishCast({
 							fid: secureContextFid,
 							pk: pk ?? pkFromBackend,
-							neynarApiKey: neynoo ?? namu,
 							text,
 							parentCast: castResponse
 								? {
@@ -278,7 +273,7 @@ export const CastCompose = () => {
 				</div>
 			)}
 
-			<SharedCast  />
+			<SharedCast />
 
 			<MediaSelectionModal
 				isOpen={isMediaModalOpen}

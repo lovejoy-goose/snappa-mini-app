@@ -124,14 +124,6 @@ const routes = app
 	.use(csrf())
 	.use(secureHeaders())
 	.get("/name", (c) => c.json({ name: c.env.NAME }))
-	.get(
-		"/namu",
-		zValidator(
-			"query",
-			z.object({ secureContextFid: z.string().transform(Number) }),
-		),
-		(c) => c.json({ namu: c.env.NEYNAR_API_KEY }),
-	)
 	.get("/time", (c) => c.json({ time: new Date().toISOString() }))
 	.get(
 		"/coingecko-price",
