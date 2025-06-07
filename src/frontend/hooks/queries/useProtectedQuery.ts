@@ -36,16 +36,16 @@ export const useProtectedQuery = (jwt: string | null) => {
 
 export const useWhistleQuery = (
 	jwt: string | null,
-	castAuthorFid: number,
+	castFid: number,
 	castHash: string,
 ) => {
 	return useQuery({
-		queryKey: ["whistle", jwt, castAuthorFid, castHash],
+		queryKey: ["whistle", jwt, castFid, castHash],
 		queryFn: async () => {
 			const res = await secureApi(jwt ?? "try-a-spoof-jwt-token").whistle.$post(
 				{
 					json: {
-						castAuthorFid,
+						castFid,
 						castHash,
 					},
 				},

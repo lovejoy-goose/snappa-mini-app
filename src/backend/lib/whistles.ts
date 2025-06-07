@@ -10,8 +10,8 @@ export const BLOCKLIST = [];
 
 const queries: Record<string, string> = {
 	getTextByCastHash: gql`
-    query getTextByCastHash($castHash: String!, $fid: Int!) {
-      getTextByCastHash(castHash: $castHash, viewerFid: $fid) {
+    query getTextByCastHash($castFid: Int!, $castHash: String!, $fid: Int!) {
+      getTextByCastHash(castFid: $castFid, castHash: $castHash, viewerFid: $fid) {
         isDecrypted
         timestamp
         text
@@ -81,20 +81,20 @@ const TextByCastHashSchema = z.object({
 
 export const getTextByCastHash = async (
 	env: Env,
-	castAuthorFid: number,
+	castFid: number,
 	castHash: string,
-	fid: number | null,
+	viewerFid: number | null,
 ) => {
 	invariant(env.MOMENTO_CACHE_NAME, "MOMENTO_CACHE_NAME is not set");
 	invariant(env.YOGA_WHISTLES_BEARER, "YOGA_WHISTLES_BEARER is not set");
 
-	if (!fid) {
+	if (!viewerFid) {
 		throw new Error("Fid is required");
 	}
 
 	const cacheClient = new Redis(env);
 	const cacheName = env.MOMENTO_CACHE_NAME;
-	const cacheKey = `getTextByCastHash-${fid}-${castAuthorFid}-${castHash}`;
+	const cacheKey = `getTextByCastHash-${castFid}-${castHash}-${viewerFid}`;
 	const cacheResponse = await cacheClient.get(cacheName, cacheKey);
 	if (cacheResponse.type === CacheGetResponse.Hit) {
 		return JSON.parse(cacheResponse.valueString()) as TextByCastHashResponse;
@@ -104,7 +104,7 @@ export const getTextByCastHash = async (
 		const res = await genericGraphQLQuery<TextByCastHashResponse>(
 			"getTextByCastHash",
 			TextByCastHashSchema,
-			{ castHash, fid },
+			{ castFid, castHash, viewerFid },
 			env.YOGA_WHISTLES_BEARER,
 		);
 
@@ -117,7 +117,9 @@ export const getTextByCastHash = async (
 
 		return res;
 	} catch (error) {
-		throw new Error(`Failed to get text by cast hash: ${castHash} for: ${fid}`);
+		throw new Error(
+			`Failed to get text by cast hash: ${castHash} for: ${viewerFid}`,
+		);
 	}
 };
 

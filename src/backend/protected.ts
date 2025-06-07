@@ -150,7 +150,7 @@ export const protectedRoutes = protectedApp
 		zValidator(
 			"json",
 			z.object({
-				castAuthorFid: z.number(),
+				castFid: z.number(),
 				castHash: z.string(),
 			}),
 		),
@@ -165,11 +165,11 @@ export const protectedRoutes = protectedApp
 					isDecrypted: false,
 				});
 			}
-			const { castAuthorFid, castHash } = c.req.valid("json");
+			const { castFid, castHash } = c.req.valid("json");
 
 			const res = await getTextByCastHash(
 				c.env,
-				castAuthorFid,
+				castFid,
 				castHash,
 				payload.fid,
 			);
