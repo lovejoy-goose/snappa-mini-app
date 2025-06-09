@@ -5,7 +5,7 @@
 	"compatibility_date": "2025-05-08",
 	"compatibility_flags": ["nodejs_compat"],
 	"vars": {
-		"CLIENT_DOMAIN": "snappa-mini-app.artlu.workers.dev",
+		"CLIENT_DOMAIN": "snappa-mini-app.dianabelieved.workers.dev",
 		"NAME": "Snappa",
 		"JWT_ALGORITHM": "HS256",
 		"MOMENTO_CACHE_NAME": "neynar",
