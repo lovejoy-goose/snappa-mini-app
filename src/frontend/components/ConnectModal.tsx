@@ -30,14 +30,14 @@ const wallets = [
 				"passkey",
 				"guest",
 			],
-			passkeyDomain: "https://snappa-mini-app.artlu.workers.dev",
+			passkeyDomain: "https://snappa-mini-app.sillygoose.workers.dev",
 		},
 		metadata: {
 			name: "Snappa",
-			icon: "https://snappa-mini-app.artlu.workers.dev/favicon.png",
+			icon: "https://snappa-mini-app.sillygoose.workers.dev/favicon.png",
 			image: {
 				alt: "Snappa",
-				src: "https://snappa-mini-app.artlu.workers.dev/favicon.png",
+				src: "https://snappa-mini-app.sillygoose.workers.dev/favicon.png",
 				width: 128,
 				height: 128,
 			},
@@ -82,9 +82,9 @@ export const ConnectModal = () => {
 			client={client}
 			appMetadata={{
 				name: "Snappa dApp",
-				url: "https://snappa-mini-app.artlu.workers.dev",
+				url: "https://snappa-mini-app.sillygoose.workers.dev",
 				description: "Snappa dApp",
-				logoUrl: "https://snappa-mini-app.artlu.workers.dev/favicon.png",
+				logoUrl: "https://snappa-mini-app.sillygoose.workers.dev/favicon.png",
 			}}
 			auth={{
 				getLoginPayload: async (params) => {
