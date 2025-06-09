@@ -1,8 +1,8 @@
 {
 	"accountAssociation": {
-		"header": "eyJmaWQiOjY1NDYsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgyMWNBOUYwRjdDMGI1OWY2MTZiMUQ5NjMyNWQ1NUI2MmM5NjYxRDZkIn0",
-		"payload": "eyJkb21haW4iOiJzbmFwcGEtbWluaS1hcHAuYXJ0bHUud29ya2Vycy5kZXYifQ",
-		"signature": "MHg3YzM0MWJhNGE3OTI3Y2ZhOTE1YWZmMjk0YTlhMWMxMzgyNzY5N2Q2ZTg4NGExNjNkODRmNGQ4Nzc3ZGZlOTY5NjNjOTlhY2JiZDk4ZWJjMmQ1Y2MxMTNlYzk3NmU4ZjI5MjI4MzU5NDk5MDE4MjFlYjBhZThkYThiYzMwMzEyYzFj"
+		"header": "eyJmaWQiOjM4MDk1MCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweEQyRGE0QkREZUVBNWE4RTVEMDE5OUY1NGQ1MkQ0QmFmNzVkZDdEODYifQ",
+		"payload": "eyJkb21haW4iOiJzbmFwcGEtbWluaS1hcHAuc2lsbHlnb29zZS53b3JrZXJzLmRldiJ9",
+		"signature": "MHhjMmI5NGM1MTRjYmJmMzY3YjZmOGE0YTc1YjZkNWM5NTExMmJiN2MzNTU5ZTAyMjIyZGU4ZGFkNGFiN2YzMGY2MTdhODNkYWJkNDBkYzRkYTM4MGVmOTgwZGZlMDNlOThhNzU1NmIxNjVhYzZhMDQ1ODUyOTJlYjYyNGE3OGRlNTFj"
 	},
 	"frame": {
 		"version": "0.0.1",
@@ -12,16 +12,16 @@
 		"tagline": "your portal to Snapchain",
 		"primaryCategory": "social",
 		"tags": ["bookmarks", "defi", "ape", "sassy", "SassyHash"],
-		"iconUrl": "https://snappa-mini-app.artlu.workers.dev/favicon.png",
-		"homeUrl": "https://snappa-mini-app.artlu.workers.dev",
-		"splashImageUrl": "https://snappa-mini-app.artlu.workers.dev/favicon.gif",
+		"iconUrl": "https://snappa-mini-app.sillygoose.workers.dev/favicon.png",
+		"homeUrl": "https://snappa-mini-app.sillygoose.workers.dev",
+		"splashImageUrl": "https://snappa-mini-app.sillygoose.workers.dev/favicon.gif",
 		"splashBackgroundColor": "#000000",
-		"castShareUrl": "https://snappa-mini-app.artlu.workers.dev/sassy",
-		"webhookUrl": "https://snappa-mini-app.artlu.workers.dev/webhook",
+		"castShareUrl": "https://snappa-mini-app.sillygoose.workers.dev/sassy",
+		"webhookUrl": "https://snappa-mini-app.sillygoose.workers.dev/webhook",
 		"ogTitle": "Snappa Mini App",
 		"ogDescription": "Snappa Mini App - Snappa, Snappa Swappa, Decent Bookmarks, SassyHash",
-		"ogImageUrl": "https://snappa-mini-app.artlu.workers.dev/favicon.png",
-		"heroImageUrl": "https://snappa-mini-app.artlu.workers.dev/BeautifulFish.mp4",
+		"ogImageUrl": "https://snappa-mini-app.sillygoose.workers.dev/favicon.png",
+		"heroImageUrl": "https://snappa-mini-app.sillygoose.workers.dev/BeautifulFish.mp4",
 		"requiredChains": ["eip155:8453"],
 		"requiredCapabilities": [
 			"actions.signIn",
