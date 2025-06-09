@@ -10,12 +10,13 @@ export const BLOCKLIST = [];
 
 const queries: Record<string, string> = {
 	getTextByCastHash: gql`
-    query getTextByCastHash($castFid: Int!, $castHash: String!, $viewerFid: Int!) {
-      getTextByCastHash(castFid: $castFid, castHash: $castHash, viewerFid: $viewerFid) {
+    query getTextByCastHash($castFid: Int!, $castHash: String!, $viewerFid: Int!, $secret: String) {
+      getTextByCastHash(castFid: $castFid, castHash: $castHash, viewerFid: $viewerFid, secret: $secret) {
         isDecrypted
         timestamp
         text
         decodedText
+		secret
       }
     }
   `,
@@ -28,6 +29,7 @@ const mutation = gql`
     $messageHash: String!
     $text: String!
     $hashedText: String!
+	$secret: String
   ) {
     writeData(
       input: {
@@ -36,6 +38,7 @@ const mutation = gql`
         messageHash: $messageHash
         text: $text
         hashedText: $hashedText
+		secret: $secret
       }
     ) {
       success
@@ -50,6 +53,7 @@ type CreateWhistleVariables = {
 	messageHash: string;
 	text: string;
 	hashedText: string;
+	secret?: string;
 };
 
 type CreateWhistleResponse = {
@@ -84,6 +88,7 @@ export const getTextByCastHash = async (
 	castFid: number,
 	castHash: string,
 	viewerFid: number | null,
+	secret?: string,
 ) => {
 	invariant(env.MOMENTO_CACHE_NAME, "MOMENTO_CACHE_NAME is not set");
 	invariant(env.YOGA_WHISTLES_BEARER, "YOGA_WHISTLES_BEARER is not set");
@@ -104,7 +109,7 @@ export const getTextByCastHash = async (
 		const res = await genericGraphQLQuery<TextByCastHashResponse>(
 			"getTextByCastHash",
 			TextByCastHashSchema,
-			{ castFid, castHash, viewerFid },
+			{ castFid, castHash, viewerFid, secret },
 			env.YOGA_WHISTLES_BEARER,
 		);
 
@@ -153,6 +158,19 @@ export const writeWhistle = async (env: Env, fid: number, text: string) => {
 		messageHash,
 		text,
 		hashedText,
+	});
+
+	// secondary write for secrets rotation
+	await graphQLClient.request<
+		CreateWhistleResponse,
+		CreateWhistleVariables
+	>(mutation, {
+		fid,
+		timestamp,
+		messageHash,
+		text,
+		hashedText,
+		secret: env.SASSY_SECRET_20250609,
 	});
 
 	return res.writeData;
