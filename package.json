@@ -22,7 +22,6 @@
 		"react-hot-toast": "^2.5.2",
 		"remixicon": "^4.6.0",
 		"tailwindcss": "^4.1.8",
-		"thirdweb": "^5.102.4",
 		"tiny-invariant": "^1.3.3",
 		"viem": "^2.30.6",
 		"wagmi": "^2.15.5",

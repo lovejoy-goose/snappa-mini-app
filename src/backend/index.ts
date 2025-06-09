@@ -11,7 +11,6 @@ import { getCoingeckoCoinDetails, getCoingeckoPrice } from "./lib/coingecko";
 import { getGeckoTerminalCoinDetails } from "./lib/geckoterminal";
 import { getNeynarUser } from "./lib/neynar";
 import { getHydratedCast, getHydratedUser } from "./lib/shim";
-import { thirdwebRoutes } from "./lib/thirdweb";
 import { protectedRoutes } from "./protected";
 
 const LOCAL_DEBUGGING = import.meta.env.DEV;
@@ -24,7 +23,6 @@ const routes = app
 		console.log(body);
 		return c.json({ success: true });
 	})
-	.route("/", thirdwebRoutes)
 	.post(
 		"/local-sign-in",
 		zValidator(

@@ -4,8 +4,6 @@ import { useFrameSDK } from "../hooks/use-frame-sdk";
 import { useInMemoryZustand, useZustand } from "../hooks/use-zustand";
 import { formatAddress } from "../lib/utils";
 import { ClickableDateSpan } from "./ClickableDateSpan";
-import { ConnectModal } from "./ConnectModal";
-import { ThirdWebAvatarWrapper } from "./ThirdWebAvatarWrapper";
 
 const INCLUDE_DEBUGGING_BUTTON = false;
 
@@ -67,7 +65,6 @@ const NavBar = () => {
 	const routeIcon = routeIcons[routeIndex];
 
 	const isSwapFlow = pathname === "/ape";
-	const isSnappaRoute = pathname === "/snappa" || pathname === "/";
 
 	return (
 		<div className="navbar">
@@ -118,12 +115,6 @@ const NavBar = () => {
 						</div>
 					)}
 
-					{!contextFid && isSnappaRoute ? (
-						<div>
-							<ConnectModal />
-						</div>
-					) : null}
-
 					{jwt ? (
 						<div className="dropdown dropdown-end">
 							<button
@@ -139,7 +130,7 @@ const NavBar = () => {
 											className="w-full h-full object-cover"
 										/>
 									) : (
-										<ThirdWebAvatarWrapper />
+										flatFish(18)
 									)}
 								</div>
 							</button>

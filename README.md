@@ -7,8 +7,6 @@ Singe Page Application (SPA) using Preact, TypeScript, TailwindCss v4 and Vite, 
 ### bleeding edge Mini App features
 
 * Share Actions load specific casts from the feed into a Mini App
-* ThirdWeb Auth for Farcaster + web2 social + passkeys
-
 
 The DX features hot module replacement, fast Rust-based Biome linting, and zero-config services. It uses only the API of the Neynar Free Plan.
 
@@ -107,12 +105,6 @@ ZEROEX_API_KEY
 ### neynar
 
 NEYNAR_API_KEY
-
-### thirdweb
-
-ADMIN_PRIVATE_KEY
-
-THIRDWEB_SECRET_KEY
 
 ### sassyhash
 

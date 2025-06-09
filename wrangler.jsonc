@@ -8,8 +8,7 @@
 		"CLIENT_DOMAIN": "snappa-mini-app.sillygoose.workers.dev",
 		"NAME": "Snappa",
 		"JWT_ALGORITHM": "HS256",
-		"MOMENTO_CACHE_NAME": "neynar",
-		"THIRDWEB_CLIENT_ID": "63563c6683df2a84ba6974e44bbed342"
+		"MOMENTO_CACHE_NAME": "neynar"
 	},
 	"upload_source_maps": true,
 	"assets": {
