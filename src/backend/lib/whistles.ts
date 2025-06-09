@@ -160,6 +160,7 @@ export const writeWhistle = async (env: Env, fid: number, text: string) => {
 	});
 
 	// secondary write for secrets rotation
+	try {
 	await graphQLClient.request<
 		CreateWhistleResponse,
 		CreateWhistleVariables
@@ -169,8 +170,11 @@ export const writeWhistle = async (env: Env, fid: number, text: string) => {
 		messageHash,
 		text,
 		hashedText,
-		secret: env.SASSY_SECRET_20250609,
-	});
+			secret: env.SASSY_SECRET_20250609,
+		});
+	} catch (error) {
+		console.error("Secondary write failed:", error);
+	}
 
 	return res.writeData;
 };
