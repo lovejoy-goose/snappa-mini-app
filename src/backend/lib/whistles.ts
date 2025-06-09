@@ -16,7 +16,6 @@ const queries: Record<string, string> = {
         timestamp
         text
         decodedText
-		secret
       }
     }
   `,
