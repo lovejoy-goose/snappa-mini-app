@@ -3,7 +3,7 @@
 // Runtime types generated with workerd@1.20250508.0 2025-05-08 nodejs_compat
 declare namespace Cloudflare {
 	interface Env {
-		CLIENT_DOMAIN: "snappa-mini-app.artlu.workers.dev";
+		CLIENT_DOMAIN: "snappa-mini-app.dianabelieved.workers.dev";
 		NAME: "Snappa";
 		JWT_ALGORITHM: "HS256";
 		MOMENTO_CACHE_NAME: "neynar";
