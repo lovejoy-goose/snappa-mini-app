@@ -111,3 +111,5 @@ NEYNAR_API_KEY
 YOGA_WHISTLES_BEARER
 
 YOGA_WHISTLES_WRITE_TOKEN
+
+SASSY_SECRET_20250609,  <-- *obtain a properly-formed secret via random key generator microservice, documented in the* [backend repo](https://github.com/artlu99/yoga-whistles/blob/058514d06ece2a64bd51e8cc5f3572332771c754/test/unit.spec.ts#L6C1-L6C1).
