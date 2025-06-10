@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import { toast } from "react-hot-toast";
 import {
-	useCastDetailsByUsernameShortHashQuery,
+	useCastDetailsQuery,
 	useUserDetailsQuery,
 } from "../hooks/queries/useOpenQuery";
 import {
@@ -163,10 +163,7 @@ export const DecentBookmarks = () => {
 								const { data: userDetails, isLoading: userDetailsLoading } =
 									useUserDetailsQuery(fid);
 								const { data: castDetails, isLoading: castDetailsLoading } =
-									useCastDetailsByUsernameShortHashQuery(
-										username,
-										`0x${hash.replace("0x", "").slice(0, 8)}` as `0x${string}`,
-									);
+									useCastDetailsQuery(fid, `0x${hash.replace("0x", "")}`);
 								return (
 									<>
 										<li key={`${hash}-cast`}>

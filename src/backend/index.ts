@@ -9,7 +9,6 @@ import { getGeckoTerminalCoinDetails } from "./lib/geckoterminal";
 import { getNeynarUser } from "./lib/neynar";
 import {
 	getHydratedCast,
-	getHydratedCastByUsernameShortHash,
 	getHydratedUser,
 } from "./lib/shim";
 import { protectedRoutes } from "./protected";
@@ -88,24 +87,6 @@ const routes = app
 		async (c) => {
 			const { fid, hash } = c.req.valid("query");
 			const cast = await getHydratedCast(fid, `0x${hash.replace("0x", "")}`);
-			return c.json({ ...cast });
-		},
-	)
-	.get(
-		"/cast-by-username-short-hash",
-		zValidator(
-			"query",
-			z.object({
-				username: z.string(),
-				shortHash: z.string().transform(String),
-			}),
-		),
-		async (c) => {
-			const { username, shortHash } = c.req.valid("query");
-			const cast = await getHydratedCastByUsernameShortHash(
-				username,
-				`0x${shortHash.replace("0x", "")}`,
-			);
 			return c.json({ ...cast });
 		},
 	)

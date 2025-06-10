@@ -66,28 +66,6 @@ export const useCastDetailsQuery = (
 	});
 };
 
-export const useCastDetailsByUsernameShortHashQuery = (
-	username: string,
-	shortHash: `0x${string}`,
-) => {
-	return useQuery({
-		queryKey: ["cast-details-by-username-short-hash", username, shortHash],
-		queryFn: async () => {
-			invariant(username, "Username is required");
-			invariant(shortHash, "Short hash is required");
-			const res = await api["cast-by-username-short-hash"].$get({
-				query: { username, shortHash },
-			});
-			return res.json();
-		},
-		enabled: !!username && !!shortHash,
-		staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
-		gcTime: 1000 * 60 * 30, // Keep data in cache for 30 minutes
-		refetchOnWindowFocus: false, // Don't refetch when window regains focus
-		refetchOnMount: false, // Don't refetch when component mounts
-	});
-};
-
 export const useCoingeckoPriceQuery = (cgid: string | null) => {
 	return useQuery({
 		queryKey: ["coingecko-price", cgid],

@@ -18,10 +18,7 @@ export const getHydratedCast = async (
 	return res;
 };
 
-export const getHydratedCastByUsernameShortHash = async (
-	username: string,
-	shortHash: `0x${string}`,
-): Promise<{ cast: Cast } | undefined> => {
-	const res = await shimApi.get<{ cast: Cast }>(`/wc/${username}/${shortHash}`);
-	return res;
+export const getFidByUsername = async (username: string): Promise<number | null> => {
+	const res = await shimApi.get<{ fid: number }>(`/f/${username}`);
+	return res?.fid ?? null;
 };
