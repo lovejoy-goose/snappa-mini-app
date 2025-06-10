@@ -1,4 +1,5 @@
 import type { GeckoTerminalCoinDetails } from "../backend/lib/geckoterminal";
+import type { JWTPayload } from "jose";
 
 export type { GeckoTerminalCoinDetails };
 
@@ -41,11 +42,4 @@ export interface Cast {
 	parentUrl?: string;
 	timestamp: number;
 	signer: `0x${string}`;
-}
-
-// jwt shape
-export interface JwtMinimalPayload {
-	sub: string | number;
-	iat: number;
-	exp: number;
 }

@@ -2,14 +2,12 @@ import { useEffect } from "preact/hooks";
 import { useLocation } from "wouter";
 import { SoonTM as SoonTMComponent } from "../components/SoonTM";
 import SpringTransition from "../components/effects/SpringTransition";
-import { api } from "../hooks/queries/useOpenQuery";
 import { useFrameSDK } from "../hooks/use-frame-sdk";
 import { useSignIn } from "../hooks/use-sign-in";
 import { useInMemoryZustand } from "../hooks/use-zustand";
-import { LOCAL_DEBUGGING } from "../lib/constants";
 
 const Picosub = () => {
-	const { jwt, setJwt } = useInMemoryZustand();
+	const { jwt } = useInMemoryZustand();
 	const { contextFid } = useFrameSDK();
 	const { signIn } = useSignIn();
 
@@ -17,20 +15,10 @@ const Picosub = () => {
 
 	useEffect(() => {
 		const doSignIn = async () => {
-			if (LOCAL_DEBUGGING) {
-				if (!contextFid) return;
-				const res = await api["local-sign-in"].$post({
-					json: { fid: contextFid },
-				});
-				if (res.status === 200) {
-					setJwt((await res.json()).token);
-				}
-			} else {
-				await signIn();
-			}
+			await signIn();
 		};
-		!jwt && doSignIn();
-	}, [contextFid, jwt, signIn, setJwt]);
+		!jwt && contextFid && doSignIn();
+	}, [contextFid, jwt, signIn]);
 
 	const showPastedCast = location[0] === "/just-tip";
 	const linkOut =

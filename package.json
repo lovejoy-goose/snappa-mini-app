@@ -3,8 +3,9 @@
 	"description": "Snappa Mini App",
 	"version": "0.0.1",
 	"dependencies": {
-		"@farcaster/frame-sdk": "^0.0.60",
+		"@farcaster/frame-sdk": "^0.0.61",
 		"@farcaster/frame-wagmi-connector": "^0.0.49",
+		"@farcaster/quick-auth": "^0.0.6",
 		"@gomomento/sdk-web": "^1.111.0",
 		"@headlessui/react": "^2.2.4",
 		"@hono/zod-validator": "^0.4.3",

@@ -2,11 +2,10 @@ import { useEffect } from "preact/hooks";
 import { useSearchParams } from "wouter";
 import { SassyCast } from "../components/SassyCast";
 import SpringTransition from "../components/effects/SpringTransition";
-import { api, useCastDetailsQuery } from "../hooks/queries/useOpenQuery";
+import { useCastDetailsQuery } from "../hooks/queries/useOpenQuery";
 import { useFrameSDK } from "../hooks/use-frame-sdk";
 import { useSignIn } from "../hooks/use-sign-in";
 import { useInMemoryZustand } from "../hooks/use-zustand";
-import { LOCAL_DEBUGGING } from "../lib/constants";
 
 const Sassy = () => {
 	const [queryParams] = useSearchParams();
@@ -16,7 +15,7 @@ const Sassy = () => {
 	const castHash = castHashRaw ? `0x${castHashRaw.replace("0x", "")}` : null;
 
 	const { castMetadata, contextFid } = useFrameSDK();
-	const { jwt, setJwt, setCastResponse } = useInMemoryZustand();
+	const { jwt, setCastResponse } = useInMemoryZustand();
 	const { signIn } = useSignIn();
 
 	const { data: castDetailsQueryResult } = useCastDetailsQuery(
@@ -31,20 +30,10 @@ const Sassy = () => {
 
 	useEffect(() => {
 		const doSignIn = async () => {
-			if (LOCAL_DEBUGGING) {
-				if (!contextFid) return;
-				const res = await api["local-sign-in"].$post({
-					json: { fid: contextFid },
-				});
-				if (res.status === 200) {
-					setJwt((await res.json()).token);
-				}
-			} else {
-				await signIn();
-			}
+			await signIn();
 		};
-		!jwt && doSignIn();
-	}, [contextFid, jwt, signIn, setJwt]);
+		!jwt && contextFid && doSignIn();
+	}, [contextFid, jwt, signIn]);
 
 	return (
 		<div className="flex flex-col text-center gap-4">

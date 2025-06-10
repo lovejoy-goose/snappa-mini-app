@@ -72,7 +72,6 @@ bun run deploy
 Update secrets in prod, e.g.:
 
 ```bash
-wrangler secret put JWT_SECRET
 wrangler secret put MOMENTO_API_KEY
 wrangler secret put NEYNAR_API_KEY
 wrangler secret put SECRET
@@ -80,9 +79,7 @@ wrangler secret put SECRET
 
 or via Cloudflare Workers dashboard (copy and paste contents of `.dev.vars`)
 
-### auth
-
-JWT_SECRET
+### checking auth
 
 SECRET
 

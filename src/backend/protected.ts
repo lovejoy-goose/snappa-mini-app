@@ -1,25 +1,23 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { jwt } from "hono/jwt";
 import { z } from "zod";
-import type { DecentBookmark, JwtMinimalPayload } from "../shared/types";
+import type { DecentBookmark } from "../shared/types";
 import {
 	deleteDecentBookmark,
 	getDecentBookmarks,
 	saveDecentBookmark,
 } from "./lib/decent-bookmarks";
 import { getEtherscanTokenBalance } from "./lib/etherscan";
+import { quickAuthMiddleware } from "./lib/quickAuth";
 import { getHydratedUser } from "./lib/shim";
 import { getTextByCastHash, writeWhistle } from "./lib/whistles";
 
 const protectedApp = new Hono<{ Bindings: Cloudflare.Env }>().basePath("/");
 
 export const protectedRoutes = protectedApp
-	.use("*", (c, next) =>
-		jwt({ secret: c.env.JWT_SECRET, alg: c.env.JWT_ALGORITHM })(c, next),
-	)
+	.use("*", quickAuthMiddleware)
 	.get("/secret", async (c) => {
-		const payload = c.get("jwtPayload") as JwtMinimalPayload;
+		const payload = c.get("jwtPayload");
 		if (!payload || !payload.sub) {
 			return c.json({
 				success: false,
@@ -37,7 +35,7 @@ export const protectedRoutes = protectedApp
 		});
 	})
 	.get("/decent-bookmarks", async (c) => {
-		const payload = c.get("jwtPayload") as JwtMinimalPayload;
+		const payload = c.get("jwtPayload");
 		if (!payload || !payload.sub) {
 			return c.json({
 				success: false,
@@ -60,7 +58,7 @@ export const protectedRoutes = protectedApp
 			}),
 		),
 		async (c) => {
-			const payload = c.get("jwtPayload") as JwtMinimalPayload;
+			const payload = c.get("jwtPayload");
 			if (!payload || !payload.sub) {
 				return c.json({
 					success: false,
@@ -105,7 +103,7 @@ export const protectedRoutes = protectedApp
 			}),
 		),
 		async (c) => {
-			const payload = c.get("jwtPayload") as JwtMinimalPayload;
+			const payload = c.get("jwtPayload");
 			if (!payload || !payload.sub) {
 				return c.json({
 					success: false,
@@ -130,7 +128,7 @@ export const protectedRoutes = protectedApp
 			}),
 		),
 		async (c) => {
-			const payload = c.get("jwtPayload") as JwtMinimalPayload;
+			const payload = c.get("jwtPayload");
 			if (!payload || !payload.sub) {
 				return c.json({
 					success: false,
@@ -167,7 +165,7 @@ export const protectedRoutes = protectedApp
 			}),
 		),
 		async (c) => {
-			const payload = c.get("jwtPayload") as JwtMinimalPayload;
+			const payload = c.get("jwtPayload");
 			if (!payload || !payload.sub) {
 				return c.json({
 					success: false,
@@ -183,7 +181,7 @@ export const protectedRoutes = protectedApp
 		},
 	)
 	.get("/zeroex-quote", async (c) => {
-		const payload = c.get("jwtPayload") as JwtMinimalPayload;
+		const payload = c.get("jwtPayload");
 		if (!payload || !payload.sub) {
 			return c.json({
 				success: false,
@@ -224,7 +222,7 @@ export const protectedRoutes = protectedApp
 			}),
 		),
 		async (c) => {
-			const payload = c.get("jwtPayload") as JwtMinimalPayload;
+			const payload = c.get("jwtPayload");
 			if (!payload || !payload.sub) {
 				return c.json({
 					success: false,
