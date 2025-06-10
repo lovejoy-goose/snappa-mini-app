@@ -1,6 +1,5 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { sift } from "radash";
 import { z } from "zod";
 import type { DecentBookmark } from "../shared/types";
 import {
@@ -10,7 +9,7 @@ import {
 } from "./lib/decent-bookmarks";
 import { getEtherscanTokenBalance } from "./lib/etherscan";
 import { quickAuthMiddleware } from "./lib/quickAuth";
-import { getFidByUsername, getHydratedUser } from "./lib/shim";
+import { getHydratedUser } from "./lib/shim";
 import { getTextByCastHash, writeWhistle } from "./lib/whistles";
 
 const protectedApp = new Hono<{ Bindings: Cloudflare.Env }>().basePath("/");
@@ -43,23 +42,7 @@ export const protectedRoutes = protectedApp
 				bookmarks: [],
 			});
 		}
-		const buggyBookmarks = await getDecentBookmarks(c.env, Number(payload.sub));
-
-		// rewrite for fid bug
-		const bookmarks = sift(
-			await Promise.all(
-				buggyBookmarks.map(async (bookmark) => {
-					const correctFid = await getFidByUsername(bookmark.username);
-					if (!correctFid) {
-						return null;
-					}
-					return {
-						...bookmark,
-						fid: correctFid,
-					};
-				}),
-			),
-		);
+		const bookmarks = await getDecentBookmarks(c.env, Number(payload.sub));
 
 		return c.json({
 			success: true,

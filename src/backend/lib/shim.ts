@@ -17,8 +17,3 @@ export const getHydratedCast = async (
 	const res = await shimApi.get<{ cast: Cast }>(`/i/${fid}/${castHash}`);
 	return res;
 };
-
-export const getFidByUsername = async (username: string): Promise<number | null> => {
-	const res = await shimApi.get<{ fid: number }>(`/f/${username}`);
-	return res?.fid ?? null;
-};
