@@ -1,5 +1,4 @@
 import type { GeckoTerminalCoinDetails } from "../backend/lib/geckoterminal";
-import type { JWTPayload } from "jose";
 
 export type { GeckoTerminalCoinDetails };
 

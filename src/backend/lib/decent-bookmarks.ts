@@ -41,12 +41,12 @@ export const getDecentBookmarks = async (
 
 export const saveDecentBookmark = async (
 	env: Env,
+	userFid: number,
 	bookmark: DecentBookmark,
 ) => {
 	invariant(env.DECENT_BOOKMARKS_SECRET, "DECENT_BOOKMARKS_SECRET is not set");
-	const { fid } = bookmark;
 	try {
-		const response = await fetch(`${endpoint}${fid}`, {
+		const response = await fetch(`${endpoint}${userFid}`, {
 			method: "POST",
 			body: JSON.stringify(bookmark),
 			headers: {

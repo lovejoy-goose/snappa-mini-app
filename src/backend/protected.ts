@@ -74,13 +74,13 @@ export const protectedRoutes = protectedApp
 					message: "User not found",
 				});
 			}
-			const bookmark: DecentBookmark = {
-				fid: Number(payload.sub),
-				hash,
-				username,
-			};
+			const bookmark: DecentBookmark = { fid, hash, username };
 			try {
-				const res = await saveDecentBookmark(c.env, bookmark);
+				const res = await saveDecentBookmark(
+					c.env,
+					Number(payload.sub),
+					bookmark,
+				);
 				return c.json({
 					success: res.statusCode === 200,
 					message: res.message,
