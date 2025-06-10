@@ -9,7 +9,7 @@ import {
 	saveDecentBookmark,
 } from "./lib/decent-bookmarks";
 import { getEtherscanTokenBalance } from "./lib/etherscan";
-import { getNeynarUser } from "./lib/neynar";
+import { getHydratedUser } from "./lib/shim";
 import { getTextByCastHash, writeWhistle } from "./lib/whistles";
 
 const protectedApp = new Hono<{ Bindings: Cloudflare.Env }>().basePath("/");
@@ -68,8 +68,8 @@ export const protectedRoutes = protectedApp
 				});
 			}
 			const { hash, fid } = c.req.valid("json");
-			const user = await getNeynarUser(c.env, fid);
-			const username = user?.username;
+			const res = await getHydratedUser(fid);
+			const username = res?.user?.username;
 			if (!username) {
 				return c.json({
 					success: false,
