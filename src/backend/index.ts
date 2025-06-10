@@ -7,6 +7,7 @@ import { secureHeaders } from "hono/secure-headers";
 import invariant from "tiny-invariant";
 import { getAddress, verifyMessage } from "viem";
 import { z } from "zod";
+import type { JwtMinimalPayload } from "../shared/types";
 import { getCoingeckoCoinDetails, getCoingeckoPrice } from "./lib/coingecko";
 import { getGeckoTerminalCoinDetails } from "./lib/geckoterminal";
 import { getNeynarUser } from "./lib/neynar";
@@ -33,22 +34,21 @@ const routes = app
 		),
 		async (c) => {
 			const { fid } = c.req.valid("json");
+			invariant(c.env.JWT_SECRET, "JWT_SECRET is not set");
+			invariant(c.env.JWT_ALGORITHM, "JWT_ALGORITHM is not set");
+
 			if (!LOCAL_DEBUGGING) {
 				return c.json(
 					{ error: "Local sign in is only available in development mode" },
 					401,
 				);
 			}
-			const token = await sign(
-				{
-					sub: "farcaster_user",
-					iat: Math.floor(Date.now() / 1000),
-					exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // 1 day
-					fid,
-				},
-				c.env.JWT_SECRET ?? "secret", // should never be the word 'secret'
-				c.env.JWT_ALGORITHM,
-			);
+			const payload: JwtMinimalPayload = {
+				sub: fid,
+				iat: Math.floor(Date.now() / 1000),
+				exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // 1 day
+			};
+			const token = await sign(payload, c.env.JWT_SECRET, c.env.JWT_ALGORITHM);
 			return c.json({ success: true, token, secureFid: fid });
 		},
 	)
@@ -105,16 +105,12 @@ const routes = app
 				return c.json({ error: "Invalid signature" }, 401);
 			}
 
-			const token = await sign(
-				{
-					sub: "farcaster_user",
-					iat: Math.floor(Date.now() / 1000),
-					exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // 1 day
-					fid,
-				},
-				c.env.JWT_SECRET ?? "secret", // should never be the word 'secret'
-				c.env.JWT_ALGORITHM,
-			);
+			const payload: JwtMinimalPayload = {
+				sub: fid,
+				iat: Math.floor(Date.now() / 1000),
+				exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // 1 day
+			};
+			const token = await sign(payload, c.env.JWT_SECRET, c.env.JWT_ALGORITHM);
 			return c.json({ success: true, token, secureFid: fid });
 		},
 	)

@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { jwt } from "hono/jwt";
 import { z } from "zod";
-import type { DecentBookmark } from "../shared/types";
+import type { DecentBookmark, JwtMinimalPayload } from "../shared/types";
 import {
 	deleteDecentBookmark,
 	getDecentBookmarks,
@@ -19,8 +19,8 @@ export const protectedRoutes = protectedApp
 		jwt({ secret: c.env.JWT_SECRET, alg: c.env.JWT_ALGORITHM })(c, next),
 	)
 	.get("/secret", async (c) => {
-		const payload = c.get("jwtPayload");
-		if (!payload || !payload.fid || typeof payload.fid !== "number") {
+		const payload = c.get("jwtPayload") as JwtMinimalPayload;
+		if (!payload || !payload.sub) {
 			return c.json({
 				success: false,
 				fid: null,
@@ -31,20 +31,20 @@ export const protectedRoutes = protectedApp
 
 		return c.json({
 			success: true,
-			fid: payload.fid,
+			fid: Number(payload.sub),
 			secret: c.env.SECRET,
 			zeroex: c.env.ZEROEX_API_KEY,
 		});
 	})
 	.get("/decent-bookmarks", async (c) => {
-		const payload = c.get("jwtPayload");
-		if (!payload || !payload.fid || typeof payload.fid !== "number") {
+		const payload = c.get("jwtPayload") as JwtMinimalPayload;
+		if (!payload || !payload.sub) {
 			return c.json({
 				success: false,
 				bookmarks: [],
 			});
 		}
-		const bookmarks = await getDecentBookmarks(c.env, payload.fid);
+		const bookmarks = await getDecentBookmarks(c.env, Number(payload.sub));
 		return c.json({
 			success: true,
 			bookmarks,
@@ -60,8 +60,8 @@ export const protectedRoutes = protectedApp
 			}),
 		),
 		async (c) => {
-			const payload = c.get("jwtPayload");
-			if (!payload || !payload.fid || typeof payload.fid !== "number") {
+			const payload = c.get("jwtPayload") as JwtMinimalPayload;
+			if (!payload || !payload.sub) {
 				return c.json({
 					success: false,
 					message: "Invalid payload",
@@ -77,7 +77,7 @@ export const protectedRoutes = protectedApp
 				});
 			}
 			const bookmark: DecentBookmark = {
-				fid: payload.fid,
+				fid: Number(payload.sub),
 				hash,
 				username,
 			};
@@ -105,15 +105,15 @@ export const protectedRoutes = protectedApp
 			}),
 		),
 		async (c) => {
-			const payload = c.get("jwtPayload");
-			if (!payload || !payload.fid || typeof payload.fid !== "number") {
+			const payload = c.get("jwtPayload") as JwtMinimalPayload;
+			if (!payload || !payload.sub) {
 				return c.json({
 					success: false,
 					message: "Invalid payload",
 				});
 			}
 			const { hash } = c.req.valid("json");
-			const res = await deleteDecentBookmark(c.env, payload.fid, hash);
+			const res = await deleteDecentBookmark(c.env, Number(payload.sub), hash);
 			return c.json({
 				success: res.statusCode === 200,
 				message: res.message,
@@ -130,8 +130,8 @@ export const protectedRoutes = protectedApp
 			}),
 		),
 		async (c) => {
-			const payload = c.get("jwtPayload");
-			if (!payload || !payload.fid || typeof payload.fid !== "number") {
+			const payload = c.get("jwtPayload") as JwtMinimalPayload;
+			if (!payload || !payload.sub) {
 				return c.json({
 					success: false,
 					fid: null,
@@ -146,12 +146,12 @@ export const protectedRoutes = protectedApp
 				c.env,
 				castFid,
 				castHash,
-				payload.fid,
+				Number(payload.sub),
 			);
 			const { isDecrypted, decodedText } = res.getTextByCastHash ?? {};
 			return c.json({
 				success: true,
-				fid: payload.fid,
+				fid: Number(payload.sub),
 				hash: castHash,
 				text: decodedText,
 				isDecrypted,
@@ -167,15 +167,15 @@ export const protectedRoutes = protectedApp
 			}),
 		),
 		async (c) => {
-			const payload = c.get("jwtPayload");
-			if (!payload || !payload.fid || typeof payload.fid !== "number") {
+			const payload = c.get("jwtPayload") as JwtMinimalPayload;
+			if (!payload || !payload.sub) {
 				return c.json({
 					success: false,
 					message: "Invalid payload",
 				});
 			}
 			const { text } = c.req.valid("json");
-			const res = await writeWhistle(c.env, payload.fid, text);
+			const res = await writeWhistle(c.env, Number(payload.sub), text);
 			return c.json({
 				success: res.success,
 				message: res.message,
@@ -183,8 +183,8 @@ export const protectedRoutes = protectedApp
 		},
 	)
 	.get("/zeroex-quote", async (c) => {
-		const payload = c.get("jwtPayload");
-		if (!payload || !payload.fid || typeof payload.fid !== "number") {
+		const payload = c.get("jwtPayload") as JwtMinimalPayload;
+		if (!payload || !payload.sub) {
 			return c.json({
 				success: false,
 				quoteResponse: null,
@@ -224,8 +224,8 @@ export const protectedRoutes = protectedApp
 			}),
 		),
 		async (c) => {
-			const payload = c.get("jwtPayload");
-			if (!payload || !payload.fid || typeof payload.fid !== "number") {
+			const payload = c.get("jwtPayload") as JwtMinimalPayload;
+			if (!payload || !payload.sub) {
 				return c.json({
 					success: false,
 					tokenBalance: null,
