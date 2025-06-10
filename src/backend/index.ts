@@ -7,10 +7,7 @@ import { z } from "zod";
 import { getCoingeckoCoinDetails, getCoingeckoPrice } from "./lib/coingecko";
 import { getGeckoTerminalCoinDetails } from "./lib/geckoterminal";
 import { getNeynarUser } from "./lib/neynar";
-import {
-	getHydratedCast,
-	getHydratedUser,
-} from "./lib/shim";
+import { getHydratedCast, getHydratedUser } from "./lib/shim";
 import { protectedRoutes } from "./protected";
 
 const app = new Hono<{ Bindings: Cloudflare.Env }>().basePath("/api");

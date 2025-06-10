@@ -46,6 +46,8 @@ export const DecentBookmarks = () => {
 	const {
 		data: decentBookmarks,
 		isLoading,
+		isError,
+		error,
 		refetch,
 	} = useDecentBookmarksQuery(jwt);
 	const { mutate: addDecentBookmark } = useAddDecentBookmarkQuery(jwt);
@@ -148,60 +150,61 @@ export const DecentBookmarks = () => {
 					</div>
 				</li>
 
-				{isLoading
-					? loadingSkeleton
-					: (decentBookmarks?.bookmarks ?? [])
-							.sort(
-								(a, b) =>
-									(a.timestamp - b.timestamp) * (sortOrder === "asc" ? 1 : -1),
-							)
-							.map((bookmark, idx) => {
-								const { timestamp, hash, username, fid } = bookmark;
-								const timestampDate = new Date(timestamp);
-								const timstampDateOnly = timestampDate.toLocaleDateString();
+				{isLoading ? (
+					loadingSkeleton
+				) : isError ? (
+					<div>Error: {error?.message}</div>
+				) : (
+					(decentBookmarks?.bookmarks ?? [])
+						.sort(
+							(a, b) =>
+								(a.timestamp - b.timestamp) * (sortOrder === "asc" ? 1 : -1),
+						)
+						.map((bookmark, idx) => {
+							const { timestamp, hash, username, fid } = bookmark;
+							const timestampDate = new Date(timestamp);
+							const timstampDateOnly = timestampDate.toLocaleDateString();
 
-								const { data: userDetails, isLoading: userDetailsLoading } =
-									useUserDetailsQuery(fid);
-								const { data: castDetails, isLoading: castDetailsLoading } =
-									useCastDetailsQuery(fid, `0x${hash.replace("0x", "")}`);
-								return (
-									<>
-										<li key={`${hash}-cast`}>
-											{userDetails?.user && castDetails?.cast ? (
-												<BookmarkedCast
-													author={userDetails.user}
-													castResponse={castDetails.cast}
-												/>
-											) : (
-												<span className="opacity-60">
-													{`${userDetailsLoading || castDetailsLoading ? "loading" : "unable to find"} cast ${hash.slice(0, 6)}...${hash.slice(-4)} by `}
-													<button
-														type="button"
-														onClick={() => viewProfile(fid)}
-													>
-														@{username}
-													</button>
-												</span>
-											)}
-										</li>
-
-										<li className="list-row" key={`${hash}-bookmark`}>
-											<div className="text-xs opacity-60">
-												{idx + 1}: bookmarked {timstampDateOnly}
-											</div>
-											<div>
-												<button
-													type="button"
-													className="btn btn-square btn-lg -translate-y-4"
-													onClick={() => handleDeleteDecentBookmark(hash)}
-												>
-													<i className="ri-pushpin-line" />
+							const { data: userDetails, isLoading: userDetailsLoading } =
+								useUserDetailsQuery(fid);
+							const { data: castDetails, isLoading: castDetailsLoading } =
+								useCastDetailsQuery(fid, `0x${hash.replace("0x", "")}`);
+							return (
+								<>
+									<li key={`${hash}-cast`}>
+										{userDetails?.user && castDetails?.cast ? (
+											<BookmarkedCast
+												author={userDetails.user}
+												castResponse={castDetails.cast}
+											/>
+										) : (
+											<span className="opacity-60">
+												{`${userDetailsLoading || castDetailsLoading ? "loading" : "unable to find"} cast ${hash.slice(0, 6)}...${hash.slice(-4)} by `}
+												<button type="button" onClick={() => viewProfile(fid)}>
+													@{username}
 												</button>
-											</div>
-										</li>
-									</>
-								);
-							})}
+											</span>
+										)}
+									</li>
+
+									<li className="list-row" key={`${hash}-bookmark`}>
+										<div className="text-xs opacity-60">
+											{idx + 1}: bookmarked {timstampDateOnly}
+										</div>
+										<div>
+											<button
+												type="button"
+												className="btn btn-square btn-lg -translate-y-4"
+												onClick={() => handleDeleteDecentBookmark(hash)}
+											>
+												<i className="ri-pushpin-line" />
+											</button>
+										</div>
+									</li>
+								</>
+							);
+						})
+				)}
 			</ul>
 		</div>
 	);
