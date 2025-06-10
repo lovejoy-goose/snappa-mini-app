@@ -58,6 +58,24 @@ export const useCastDetailsQuery = (
 	});
 };
 
+export const useCastDetailsByUsernameShortHashQuery = (
+	username: string,
+	shortHash: `0x${string}`,
+) => {
+	return useQuery({
+		queryKey: ["cast-details-by-username-short-hash", username, shortHash],
+		queryFn: async () => {
+			invariant(username, "Username is required");
+			invariant(shortHash, "Short hash is required");
+			const res = await api["cast-by-username-short-hash"].$get({
+				query: { username, shortHash },
+			});
+			return res.json();
+		},
+		enabled: !!username && !!shortHash,
+	});
+};
+
 export const useCoingeckoPriceQuery = (cgid: string | null) => {
 	return useQuery({
 		queryKey: ["coingecko-price", cgid],

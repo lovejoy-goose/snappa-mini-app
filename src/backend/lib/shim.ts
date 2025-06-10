@@ -17,3 +17,11 @@ export const getHydratedCast = async (
 	const res = await shimApi.get<{ cast: Cast }>(`/i/${fid}/${castHash}`);
 	return res;
 };
+
+export const getHydratedCastByUsernameShortHash = async (
+	username: string,
+	shortHash: `0x${string}`,
+): Promise<{ cast: Cast } | undefined> => {
+	const res = await shimApi.get<{ cast: Cast }>(`/wc/${username}/${shortHash}`);
+	return res;
+};
