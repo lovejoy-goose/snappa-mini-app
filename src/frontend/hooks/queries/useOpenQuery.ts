@@ -37,6 +37,10 @@ export const useUserDetailsQuery = (fid: number | null) => {
 			return res.json();
 		},
 		enabled: !!fid,
+		staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+		gcTime: 1000 * 60 * 30, // Keep data in cache for 30 minutes
+		refetchOnWindowFocus: false, // Don't refetch when window regains focus
+		refetchOnMount: false, // Don't refetch when component mounts
 	});
 };
 
@@ -55,6 +59,10 @@ export const useCastDetailsQuery = (
 			return res.json();
 		},
 		enabled: !!fid && !!hash,
+		staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+		gcTime: 1000 * 60 * 30, // Keep data in cache for 30 minutes
+		refetchOnWindowFocus: false, // Don't refetch when window regains focus
+		refetchOnMount: false, // Don't refetch when component mounts
 	});
 };
 
@@ -73,6 +81,10 @@ export const useCastDetailsByUsernameShortHashQuery = (
 			return res.json();
 		},
 		enabled: !!username && !!shortHash,
+		staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+		gcTime: 1000 * 60 * 30, // Keep data in cache for 30 minutes
+		refetchOnWindowFocus: false, // Don't refetch when window regains focus
+		refetchOnMount: false, // Don't refetch when component mounts
 	});
 };
 
